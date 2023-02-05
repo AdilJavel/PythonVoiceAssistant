@@ -183,7 +183,7 @@ def on_submit():
 
 
 
-            #Russian Language
+            #Russian Languagee
     elif (lang==langrus):
         if there_exists(["Привет", "Здравствуй"], command):
             speak("Здравствуйте!")
