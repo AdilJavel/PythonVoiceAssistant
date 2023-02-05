@@ -9,39 +9,48 @@ import pywhatkit
 import speech_recognition as sr
 import pyttsx3
 from wikipedia import wikipedia
-import Annex
 import wolframalpha
 
-languageforrecognize = "en"
-
+langeng="en_US.UTF-8"
+langrus="ru_RU.UTF-8"
+lang = langeng
+engine = pyttsx3.init()
 def there_exists(terms,command):
     for term in terms:
         if term in command:
             return True
 def speak(text):
-    engine = pyttsx3.init()
+    engine.setProperty('voice', lang)
     engine.say(text)
     engine.runAndWait()
 
+
+def set_volume(val):
+    volume = float(val) / 100
+    engine.setProperty('volume', volume)
 def listen():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
     try:
-        return r.recognize_google(audio, language=os.environ["LANGUAGE"])
+        if lang==langeng:
+            langforrec="en"
+        else:
+            langforrec="ru"
+        return r.recognize_google(audio, language=langforrec)
     except sr.UnknownValueError:
         return ""
 def change_language(language):
     if language == "English":
-        os.environ["LANGUAGE"] = "en_US.UTF-8"
+        lang = langeng
     elif language == "Russian":
-        os.environ["LANGUAGE"] = "ru_RU.UTF-8"
+        lang = langrus
 def on_submit():
     command = listen()
-    if (os.environ["LANGUAGE"] == "en_US.UTF-8"):
+    if (lang == langeng):
         if there_exists(["Hello","Hi"], command):
             speak("Hello there!")
-        elif there_exists(["Change the Language","Change Language"], command):
+        elif there_exists(["change the Language","change Language"], command):
             language="ru"
             change_language("Russian")
             speak("сменил язык")
@@ -175,7 +184,7 @@ def on_submit():
 
 
             #Russian Language
-    elif (os.environ["LANGUAGE"] == "ruRU.UTF-8"):
+    elif (lang==langrus):
         if there_exists(["Привет", "Здравствуй"], command):
             speak("Здравствуйте!")
         elif there_exists(["Смени Язык", "Поменяй Язык"], command):
